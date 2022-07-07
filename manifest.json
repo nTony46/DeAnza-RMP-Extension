@@ -5,7 +5,7 @@
     "manifest_version": 3,
     "background":
     {
-        "service_worker": "Background.js"
+        "service_worker": "background.js"
     },
     "permissions": ["storage", "activeTab", "contextMenus"],
     "action": 
@@ -15,7 +15,7 @@
     "content_scripts": [
         {
             "matches": ["https://*.google.com/*", "https://www.deanza.edu/schedule/*", "http://www.ratemyprofessors.com/"],
-            "js": ["content.js"]
+            "js": ["jquery-3.6.0.min.js", "content.js"]
         }
     ]
 }
