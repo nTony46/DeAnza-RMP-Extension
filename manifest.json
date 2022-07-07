@@ -1,0 +1,21 @@
+{
+    "name": "DeAnza Rate My Professor Extension", 
+    "description": "View the Rate My Professor ratings in the course catalog",
+    "version": "0.0.1",
+    "manifest_version": 3,
+    "background":
+    {
+        "service_worker": "Background.js"
+    },
+    "permissions": ["storage", "activeTab", "contextMenus"],
+    "action": 
+    {
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://*.google.com/*", "https://www.deanza.edu/schedule/*", "http://www.ratemyprofessors.com/"],
+            "js": ["content.js"]
+        }
+    ]
+}
