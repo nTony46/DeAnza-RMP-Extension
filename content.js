@@ -28,43 +28,46 @@ function timeout(){
             if (i == 2){
 
                 // Some new/temp professors have commas in between first and last name
-                var name = [a[i].innerHTML.replace(',', '')];     
-                professors.push(name)
+                var name = a[i].innerHTML.replace(',', '');
+                var seperated_name = name.split(' ');
+
+                professors.push(seperated_name)
             }
         }
     }
 
 
     for (var i = 0; i < professors.length; i++){
-        console.log(i + ", " + professors[i])
+        console.log(i + ", " + professors[i] + " length is " + professors[i].length)
+    }
+    getProfessorRatings(professors)
+
+}
+
+
+function getProfessorRatings(professors){
+
+    ratings = [];
+    
+    i = 0
+    if (professors[i].length >= 3){
+        var url = "https://www.ratemyprofessors.com/search/teachers?query="
+                    + professors[i][0] +'%20'+ professors[i][1] +'%20'+ professors[i][2] + "&sid=U2Nob29sLTE5Njc=";
+    }
+    else {
+        var url = "https://www.ratemyprofessors.com/search/teachers?query="
+                    + professors[i][0] +'%20'+ professors[i][1] + "&sid=U2Nob29sLTE5Njc=";
     }
 
-    /*
-    $(".table table-schedule table-hover mix-container").ready(function(){
 
-        var instructors = [];
-        var names = [];
-        var i = 0;
-        var j = 0;
-
-        var table = document.getElementsByClassName("table table-schedule table-hover mix-container");
+    (async () => {
+        const response = await fetch("https://cors-anywhere.herokuapp.com/" + url);
+        const template = await response.text();
+        console.log(template);
+    })();
 
 
-        while(($(".table table-schedule table-hover mix-container")).find("> tbody > tr > td") != undefined){
-            names[i] = [];
-            names.push[i];
-            console.log(i);
-            console.log(($(".table table-schedule table-hover mix-container")).find("> tbody > tr > td").get());
-            i++;
-            if(i == 50){
-                break;
-            }
 
-        }
-        return;
-    });
-
-    */
 
 }
 

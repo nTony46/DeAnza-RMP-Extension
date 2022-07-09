@@ -7,15 +7,21 @@
     {
         "service_worker": "background.js"
     },
-    "permissions": ["storage", "activeTab", "contextMenus"],
+    "permissions": ["storage", "activeTab", "contextMenus", "https://www.deanza.edu*","http://www.ratemyprofessors.com/"],
     "action": 
     {
         "default_popup": "popup.html"
     },
     "content_scripts": [
         {
-            "matches": ["https://*.google.com/*", "https://www.deanza.edu/schedule/*", "http://www.ratemyprofessors.com/"],
+            "matches": ["https://www.deanza.edu/schedule/*", "http://www.ratemyprofessors.com/"],
             "js": ["jquery-3.6.0.min.js", "content.js"]
         }
-    ]
+    ],
+    "host_permissions": [
+        "https://www.deanza.edu*", "http://www.ratemyprofessors.com/"
+    ],
+    "content_security_policy": {
+        "extension_pages": "default-src 'self'; connect-src http://www.ratemyprofessors.com/ data: blob: filesystem:;"
+    }
 }
