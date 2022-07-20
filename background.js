@@ -1,3 +1,13 @@
 chrome.runtime.onInstalled.addListener(() => {
-    console.log("Hello World!");
+    console.log("Hello from background.js!");
 });
+
+
+
+/*
+chrome.runtime.onMessage.addListener(
+    function(request, )
+)
+
+*/
+
