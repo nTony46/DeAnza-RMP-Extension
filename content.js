@@ -4,7 +4,6 @@
      some cases
    - load the rest of the content script (apart form getProfessorData()) onyl when
      it is at a De Anza college Schedule website
-   - Be able to look for associated nicknames inside database
 */
 
 console.log("Hello from content.js");
@@ -32,10 +31,34 @@ var totalProfessors;
     totalProfessors = data_json.searchResultsTotal;
 })();
 
+async function main(){
+    const nicknames = {
+        "JIAN YU": "JIAN (ANDREW) YU",
+        "PAUL DU": "JIANBO (PAUL) DU",
+        "SOL PARAJON PUENZO": "SOL PUENZO",
+        "EDWARD AHRENS": "ED AHRENS",
+        "ALEXANDRE STOYKOV": "ALEX STOYKOV",
+        "RAYMAND BUYCO": "RAY BUYCO",
+        "JULIE KEIFFER-LEWIS": "JULIE LEWIS",
+        "BEN KLINE": "BENJAMIN KLINE",
+        "SO KAM LEE": "SO LEE",
+        "RODERIC TAYLOR": "RODERIC (RICK) TAYLOR",
+        "CHRISTIE TSUJI": "CHRIS TSUJI",
+        "VICKY ANNEN": "VICKIE ANNEN",
+        "ROBERT KALPIN": "BOB KALPIN",
+        "LAKSHMIKANTA SENGUPTA": "SENGUPTA LAKSHMIKANTA",
+        "SCOTT OSBORNE": "L. SCOTT OSBORNE",
+        "LAURI HAMMOND": "HAMMOND LAURIE",
+        "JEFFREY WEST": "JEFF WEST",
+        "ROBERT SLATE": "BOB SLATE",
+        "TONY SANTA ANA": "ANTHONY SANTA ANA",
+        "BENETT ZUSSMAN:": "BENNET ZUSSMAN",
+        "JAMES SCHNEIDER": "JAMES SCHNEIDER",
+        "JAMES CLIFFORD JR": "JAMES CLIFFORD",
+        "RUSTY JOHNSON": "MARK JOHNSON"
+    }
 
-function timeout(){
     getProfessorData();
-
     professors = []
     var table = document.getElementsByClassName("table table-schedule table-hover mix-container")[0];
     var tableBody = table.getElementsByTagName('tbody')[0];
@@ -51,10 +74,16 @@ function timeout(){
                 // Some new/temp professors have commas in between first and last name
                 var name = a[i].innerHTML.replace(',', '');
                 name = name.toString().toUpperCase();
+
+                if (name in nicknames){
+                    name = nicknames[name];
+                }
+
                 professors.push(name);
-                console.log("LOOKING FOR: " + name);
-                
-                injectRating(tableSpot[7], name);
+                console.log("Injecting data for: " + name);
+
+                var pDataObject = await read(name);
+                injectRating(tableSpot[7], pDataObject);
 
             }
         }
@@ -62,10 +91,9 @@ function timeout(){
 }
 
 
-async function injectRating(body, profName){
+async function injectRating(body, pDataObj){
 
     // Getting the professor object from the the Chrome Local Storage
-    var pDataObj = await read(profName);
     pDataObj = JSON.stringify(pDataObj)
 
     if (pDataObj == JSON.stringify({})){
@@ -79,12 +107,13 @@ async function injectRating(body, profName){
         var pos_URL = pDataObj.indexOf("url") + 6;
         var pURL = pDataObj.slice(pos_URL, -3);
 
-        console.log(`\n${profName}'s rating is: ${pRating}`);
-        console.log(`\n${profName}'s URL is: ${pURL}`);
+        //console.log(`\n${profName}'s rating is: ${pRating}`);
+        //console.log(`\n${profName}'s URL is: ${pURL}`);
 
         var displayInfo = document.createElement('a');
         displayInfo.innerHTML = "\n" + pRating + "/5.0"
         displayInfo.href = pURL;
+        displayInfo.setAttribute('target', '_blank');
         displayInfo.style.fontWeight = "bold";
 
         switch(true)
@@ -159,4 +188,4 @@ function read(key){
 }
 
 
-setTimeout(timeout, 3500);
+setTimeout(main, 750);
