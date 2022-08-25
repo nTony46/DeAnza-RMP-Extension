@@ -1,12 +1,33 @@
-/* TODO: 
-   - only call getProfessorData() on browser startup instead of inside timeout()
-   - change injection destination; from tableSpot[7] to something else, not injecting in
-     some cases
-   - load the rest of the content script (apart form getProfessorData()) onyl when
-     it is at a De Anza college Schedule website
-*/
-
 console.log("Hello from content.js");
+const nicknames = {
+    "JIAN YU": "JIAN (ANDREW) YU",
+    "PAUL DU": "JIANBO (PAUL) DU",
+    "SOL PARAJON PUENZO": "SOL PUENZO",
+    "EDWARD AHRENS": "ED AHRENS",
+    "ALEXANDRE STOYKOV": "ALEX STOYKOV",
+    "RAYMAND BUYCO": "RAY BUYCO",
+    "JULIE KEIFFER-LEWIS": "JULIE LEWIS",
+    "BEN KLINE": "BENJAMIN KLINE",
+    "SO KAM LEE": "SO LEE",
+    "RODERIC TAYLOR": "RODERIC (RICK) TAYLOR",
+    "CHRISTIE TSUJI": "CHRIS TSUJI",
+    "VICKY ANNEN": "VICKIE ANNEN",
+    "ROBERT KALPIN": "BOB KALPIN",
+    "LAKSHMIKANTA SENGUPTA": "SENGUPTA LAKSHMIKANTA",
+    "SCOTT OSBORNE": "L. SCOTT OSBORNE",
+    "LAURI HAMMOND": "HAMMOND LAURIE",
+    "JEFFREY WEST": "JEFF WEST",
+    "ROBERT SLATE": "BOB SLATE",
+    "TONY SANTA ANA": "ANTHONY SANTA ANA",
+    "BENETT ZUSSMAN:": "BENNET ZUSSMAN",
+    "JAMES SCHNEIDER": "JAMES SCHNEIDER",
+    "JAMES CLIFFORD JR": "JAMES CLIFFORD",
+    "RUSTY JOHNSON": "MARK JOHNSON",
+    "CLARE NGUYEN": "UYEN (CLARE) NGUYEN",
+    "NGUYEN VINH KHA": "VINH NGUYEN",
+    "ZACK JUDSON": "ZACHARY JUDSON",
+    "MO GERAGHTY": "MAURICE GERAGHTY"
+}
 
 class Professor{
     constructor(firstName, lastName, teacherID, numRatings, averageRating){
@@ -20,7 +41,6 @@ class Professor{
     }
 }
 
-
 // Getting the total number of professors from the first page of the JSON file.
 var totalProfessors;
 (async () => {
@@ -32,32 +52,6 @@ var totalProfessors;
 })();
 
 async function main(){
-    const nicknames = {
-        "JIAN YU": "JIAN (ANDREW) YU",
-        "PAUL DU": "JIANBO (PAUL) DU",
-        "SOL PARAJON PUENZO": "SOL PUENZO",
-        "EDWARD AHRENS": "ED AHRENS",
-        "ALEXANDRE STOYKOV": "ALEX STOYKOV",
-        "RAYMAND BUYCO": "RAY BUYCO",
-        "JULIE KEIFFER-LEWIS": "JULIE LEWIS",
-        "BEN KLINE": "BENJAMIN KLINE",
-        "SO KAM LEE": "SO LEE",
-        "RODERIC TAYLOR": "RODERIC (RICK) TAYLOR",
-        "CHRISTIE TSUJI": "CHRIS TSUJI",
-        "VICKY ANNEN": "VICKIE ANNEN",
-        "ROBERT KALPIN": "BOB KALPIN",
-        "LAKSHMIKANTA SENGUPTA": "SENGUPTA LAKSHMIKANTA",
-        "SCOTT OSBORNE": "L. SCOTT OSBORNE",
-        "LAURI HAMMOND": "HAMMOND LAURIE",
-        "JEFFREY WEST": "JEFF WEST",
-        "ROBERT SLATE": "BOB SLATE",
-        "TONY SANTA ANA": "ANTHONY SANTA ANA",
-        "BENETT ZUSSMAN:": "BENNET ZUSSMAN",
-        "JAMES SCHNEIDER": "JAMES SCHNEIDER",
-        "JAMES CLIFFORD JR": "JAMES CLIFFORD",
-        "RUSTY JOHNSON": "MARK JOHNSON"
-    }
-
     getProfessorData();
     professors = []
     var table = document.getElementsByClassName("table table-schedule table-hover mix-container")[0];
@@ -89,7 +83,6 @@ async function main(){
         }
     }   
 }
-
 
 async function injectRating(body, pDataObj){
 
@@ -138,7 +131,6 @@ async function injectRating(body, pDataObj){
     }
 }
 
-
 function getProfessorData(){
     // Going through all RMP pages and parsing the data into a Professor object
     (async () => {
@@ -158,6 +150,10 @@ function getProfessorData(){
                 numRatings = cur_prof.tNumRatings;
                 averageRating = cur_prof.overall_rating;
 
+                if (numRatings == 0){
+                    continue;
+                }
+
                 fullName = (firstName + " " + lastName).toString().toUpperCase();
 
                 //console.log(`${fullName} ${teacherID} ${numRatings} ${averageRating}`);
@@ -174,7 +170,6 @@ function getProfessorData(){
     })();
 }
 
-
 function read(key){
     return new Promise((resolve, reject) => {
         if (key != null) {
@@ -186,6 +181,5 @@ function read(key){
         }
     });
 }
-
 
 setTimeout(main, 750);
